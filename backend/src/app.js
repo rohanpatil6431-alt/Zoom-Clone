@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "node:http";
-
+import dotenv from "dotenv";
+dotenv.config();
 import { Server } from "socket.io";
 
 import mongoose from "mongoose";
@@ -9,6 +10,7 @@ import { connectToSocket } from "./controllers/socketManager.js";
 import cors from "cors";
 import userRoutes from "./routes/users.routes.js";
 
+const db = process.env.MONGO_URI;
 const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
@@ -23,7 +25,7 @@ app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
     app.set("mongo_user")
-    const connectionDb = await mongoose.connect("mongodb+srv://imdigitalashish:imdigitalashish@cluster0.cujabk4.mongodb.net/")
+    const connectionDb = await mongoose.connect(db)
 
     console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
     server.listen(app.get("port"), () => {
